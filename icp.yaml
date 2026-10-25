@@ -1,0 +1,18 @@
+networks:
+  # Local test network with its own Internet Identity (local testing only).
+  - name: local
+    mode: managed
+    ii: true
+
+canisters:
+  - name: backend
+    recipe:
+      type: "@dfinity/motoko@v5.1.0"
+  - name: frontend
+    recipe:
+      type: "@dfinity/static-site@v0.4.1"
+      configuration:
+        build:
+          - pnpm install --frozen-lockfile
+          - pnpm --dir src/frontend build
+        dir: src/frontend/dist

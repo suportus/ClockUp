@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { WorkEntry, WorkEntryInput } from "../backend";
+import type {
+  Variant_frontend_backend,
+  WorkEntry,
+  WorkEntryInput,
+} from "../backend";
+import { isAccessDenied } from "../lib/canisterEnv";
 import { useActor } from "./useActor";
 
 export function useGetEntriesForMonth(year: bigint, month: bigint) {
@@ -83,6 +88,8 @@ export function useGetUserName(enabled: boolean) {
       return actor.getUserName();
     },
     enabled: !!actor && !isFetching && enabled,
+    // Don't retry when the principal is not on the allow-list.
+    retry: (failureCount, error) => !isAccessDenied(error) && failureCount < 3,
   });
 }
 
@@ -97,6 +104,48 @@ export function useSetUserName() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userName"] });
+    },
+  });
+}
+
+export function useGetCycleBalance() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<bigint>({
+    queryKey: ["cycleBalance"],
+    queryFn: async () => {
+      if (!actor) return 0n;
+      return actor.getCycleBalance();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useGetWalletCycles() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<bigint>({
+    queryKey: ["walletCycles"],
+    queryFn: async () => {
+      if (!actor) return 0n;
+      return actor.getWalletCycles();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useClaimCycles() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (target: Variant_frontend_backend) => {
+      if (!actor) throw new Error("Actor not initialized");
+      return actor.claimCycles(target);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["walletCycles"] });
+      queryClient.invalidateQueries({ queryKey: ["cycleBalance"] });
     },
   });
 }

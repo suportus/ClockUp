@@ -18,11 +18,14 @@ type WorkEntry__782518821 =
     workedMinutes : Int
   };
 actor {
+  stable var allowedUsers :
+    {root : Tree__4145630<Principal, Bool>; size : Nat};
   stable var userEntries :
     {
-      root : Tree__4145630<Nat, Map__334413012<Int, WorkEntry__782518821>>;
+      root :
+        Tree__4145630<Principal, Map__334413012<Int, WorkEntry__782518821>>;
       size : Nat
     };
   stable var userProfiles :
-    {root : Tree__4145630<Nat, UserProfile__491224006>; size : Nat}
+    {root : Tree__4145630<Principal, UserProfile__491224006>; size : Nat}
 };

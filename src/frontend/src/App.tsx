@@ -1,4 +1,7 @@
 import { ThemeProvider } from "next-themes";
+import { useState } from "react";
+import { AdminPage } from "./components/AdminPage";
+import { PrincipalDisplay } from "./components/PrincipalDisplay";
 import { UserNameDisplay } from "./components/UserNameDisplay";
 import { UserNamePrompt } from "./components/UserNamePrompt";
 import { WorkHoursLogger } from "./components/WorkHoursLogger";
@@ -13,13 +16,18 @@ import {
 import { Toaster } from "./components/ui/sonner";
 import { useInternetIdentity } from "./hooks/useInternetIdentity";
 import { useGetUserName } from "./hooks/useQueries";
+import { isAccessDenied } from "./lib/canisterEnv";
 
 export default function App() {
-  const { identity, login, clear, isInitializing, isLoggingIn } =
+  const { identity, login, clear, isInitializing, isLoggingIn, loginError } =
     useInternetIdentity();
-  const { data: userName, isLoading: isLoadingUserName } = useGetUserName(
-    !!identity,
-  );
+  const {
+    data: userName,
+    isLoading: isLoadingUserName,
+    error: userNameError,
+  } = useGetUserName(!!identity);
+  const [showAdmin, setShowAdmin] = useState(false);
+  const principal = identity?.getPrincipal().toText() ?? "";
 
   if (isInitializing) {
     return (
@@ -80,6 +88,11 @@ export default function App() {
                   "Prijava"
                 )}
               </Button>
+              {loginError && (
+                <p className="text-sm text-destructive text-center break-words">
+                  Prijava ni uspela: {loginError.message}
+                </p>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -109,6 +122,52 @@ export default function App() {
     );
   }
 
+  // Not on the allow-list (or backend unreachable): show the principal so
+  // the user can send it to the administrator.
+  if (userNameError) {
+    const denied = isAccessDenied(userNameError);
+    return (
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="light"
+        forcedTheme="light"
+        enableSystem={false}
+      >
+        <div
+          className="min-h-screen flex items-center justify-center p-4"
+          style={{ backgroundColor: "#f9f9f9" }}
+        >
+          <Card
+            className="w-full max-w-md shadow-soft-lg"
+            style={{ borderRadius: "10px" }}
+          >
+            <CardHeader className="text-center space-y-2">
+              <CardTitle className="text-2xl font-bold">
+                {denied ? "Dostop zavrnjen" : "Napaka pri povezavi"}
+              </CardTitle>
+              <CardDescription className="text-base">
+                {denied
+                  ? "Vaš račun še nima dostopa. Spodnji principal pošljite skrbniku, da vas doda."
+                  : "Povezava z zaledjem ni uspela. Poskusite znova pozneje."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <PrincipalDisplay principal={principal} />
+              <Button
+                onClick={clear}
+                variant="outline"
+                className="w-full rounded-lg"
+              >
+                Odjava
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+        <Toaster />
+      </ThemeProvider>
+    );
+  }
+
   // Show name prompt if user doesn't have a name set
   if (!userName) {
     return (
@@ -133,7 +192,7 @@ export default function App() {
     >
       <div className="min-h-screen" style={{ backgroundColor: "#f9f9f9" }}>
         <header className="border-b bg-white sticky top-0 z-10 shadow-xs">
-          <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="container mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-2">
             <div className="flex items-center gap-4">
               <img
                 src="https://nar7q-4iaaa-aaaao-qksbq-cai.raw.icp0.io///Caffeine/pictures/logo.png"
@@ -143,13 +202,29 @@ export default function App() {
               <h1 className="text-2xl font-bold text-primary">ClockUp</h1>
               <UserNameDisplay userName={userName} />
             </div>
-            <Button onClick={clear} variant="outline" className="rounded-lg">
-              Odjava
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => setShowAdmin(true)}
+                variant="outline"
+                className="rounded-lg"
+              >
+                Admin
+              </Button>
+              <Button onClick={clear} variant="outline" className="rounded-lg">
+                Odjava
+              </Button>
+            </div>
           </div>
         </header>
         <main className="container mx-auto px-4 py-6">
-          <WorkHoursLogger userName={userName} />
+          {showAdmin ? (
+            <AdminPage
+              principal={principal}
+              onBack={() => setShowAdmin(false)}
+            />
+          ) : (
+            <WorkHoursLogger userName={userName} />
+          )}
         </main>
         <footer className="border-t bg-white mt-12">
           <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
