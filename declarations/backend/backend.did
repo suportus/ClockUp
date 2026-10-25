@@ -1,0 +1,35 @@
+type WorkEntryInput = 
+ record {
+   arrivalTime: int;
+   date: int;
+   dayType: DayType;
+   departureTime: int;
+ };
+type WorkEntry = 
+ record {
+   arrivalTime: int;
+   date: int;
+   dayType: DayType;
+   departureTime: int;
+   workedHours: int;
+ };
+type DayType = 
+ variant {
+   bolniska;
+   delovniDan;
+   dopust;
+   nedelja;
+   praznik;
+   prostiDan;
+ };
+service : {
+  deleteEntry: (date: int) -> ();
+  deleteMonth: (year: int, month: int) -> ();
+  getAllEntries: () -> (vec WorkEntry);
+  getCurrentDate: () -> (int);
+  getEntriesForMonth: (year: int, month: int) -> (vec WorkEntry);
+  getEntry: (date: int) -> (opt WorkEntry);
+  getUserName: () -> (opt text);
+  saveEntry: (entryInput: WorkEntryInput) -> ();
+  setUserName: (name: text) -> ();
+}

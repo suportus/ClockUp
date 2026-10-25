@@ -1,0 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.625rem;
+    /* Light, modern color scheme */
+    --background: 0.99 0 0;
+    --foreground: 0.2 0 0;
+    --card: 1 0 0;
+    --card-foreground: 0.2 0 0;
+    --popover: 1 0 0;
+    --popover-foreground: 0.2 0 0;
+    /* Light blue primary color */
+    --primary: 0.6 0.15 220;
+    --primary-foreground: 1 0 0;
+    --secondary: 0.95 0.01 220;
+    --secondary-foreground: 0.2 0 0;
+    --muted: 0.96 0.005 220;
+    --muted-foreground: 0.5 0.01 220;
+    --accent: 0.95 0.01 220;
+    --accent-foreground: 0.2 0 0;
+    --destructive: 0.55 0.2 25;
+    --destructive-foreground: 1 0 0;
+    --border: 0.9 0.01 220;
+    --input: 0.92 0.01 220;
+    --ring: 0.6 0.15 220;
+    --chart-1: 0.65 0.15 220;
+    --chart-2: 0.6 0.12 200;
+    --chart-3: 0.7 0.15 150;
+    --chart-4: 0.55 0.1 300;
+    --chart-5: 0.75 0.12 50;
+    --sidebar: 1 0 0;
+    --sidebar-foreground: 0.2 0 0;
+    --sidebar-primary: 0.6 0.15 220;
+    --sidebar-primary-foreground: 1 0 0;
+    --sidebar-accent: 0.95 0.01 220;
+    --sidebar-accent-foreground: 0.2 0 0;
+    --sidebar-border: 0.9 0.01 220;
+    --sidebar-ring: 0.6 0.15 220;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+}

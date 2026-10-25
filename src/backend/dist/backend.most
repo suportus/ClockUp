@@ -1,0 +1,28 @@
+// Version: 1.0.0
+type DayType__986459981 =
+  {#bolniska; #delovniDan; #dopust; #nedelja; #praznik; #prostiDan};
+type Map__334413012<K, V> = {root : Tree__4145630<K, V>; size : Nat};
+type Tree__4145630<K, V> =
+  {
+    #black : (Tree__4145630<K, V>, K, V, Tree__4145630<K, V>);
+    #leaf;
+    #red : (Tree__4145630<K, V>, K, V, Tree__4145630<K, V>)
+  };
+type UserProfile__491224006 = {name : Text};
+type WorkEntry__782518821 =
+  {
+    arrivalTime : Int;
+    date : Int;
+    dayType : DayType__986459981;
+    departureTime : Int;
+    workedMinutes : Int
+  };
+actor {
+  stable var userEntries :
+    {
+      root : Tree__4145630<Nat, Map__334413012<Int, WorkEntry__782518821>>;
+      size : Nat
+    };
+  stable var userProfiles :
+    {root : Tree__4145630<Nat, UserProfile__491224006>; size : Nat}
+};
