@@ -8,7 +8,7 @@
   "theme_color": "#4a90e2",
   "icons": [
     {
-      "src": "https://nar7q-4iaaa-aaaao-qksbq-cai.raw.icp0.io///Caffeine/pictures/logo.png",
+      "src": "/assets/logo.png",
       "sizes": "any",
       "type": "image/png",
       "purpose": "any maskable"

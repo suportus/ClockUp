@@ -157,6 +157,15 @@ export function generatePDF(
       font-weight: bold;
       font-size: 1.1em;
     }
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 0.8em;
+      color: #6b7280;
+    }
+    .footer a {
+      color: inherit;
+    }
     @media print {
       body {
         margin: 20px;
@@ -229,6 +238,11 @@ export function generatePDF(
       <span class="summary-label">Skupaj vse ure:</span>
       <span class="summary-value">${formatWorkedTime(summary.totalAllMinutes)}</span>
     </div>
+  </div>
+
+  <div class="footer">
+    © ${new Date().getFullYear()} · Powered by
+    <a href="https://internetcomputer.org" target="_blank" rel="noopener noreferrer">Internet Computer</a>
   </div>
 </body>
 </html>

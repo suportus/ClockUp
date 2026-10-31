@@ -195,7 +195,7 @@ export default function App() {
           <div className="container mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-2">
             <div className="flex items-center gap-4">
               <img
-                src="https://nar7q-4iaaa-aaaao-qksbq-cai.raw.icp0.io///Caffeine/pictures/logo.png"
+                src="/assets/logo.png"
                 alt="ClockUp"
                 style={{ height: "32px", width: "auto" }}
               />
@@ -226,18 +226,19 @@ export default function App() {
             <WorkHoursLogger userName={userName} />
           )}
         </main>
-        <footer className="border-t bg-white mt-12">
-          <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
-            © 2025. Built with love using{" "}
-            <a
-              href="https://caffeine.ai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              caffeine.ai
-            </a>
-          </div>
+        <footer
+          className="px-4 pt-6 text-center text-xs text-muted-foreground"
+          style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+        >
+          © {new Date().getFullYear()} · Powered by{" "}
+          <a
+            href="https://internetcomputer.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-foreground"
+          >
+            Internet Computer
+          </a>
         </footer>
         <Toaster />
       </div>
